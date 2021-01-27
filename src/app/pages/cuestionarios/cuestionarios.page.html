@@ -1,0 +1,94 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Crear Encuesta</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form autocomplete="off" [formGroup]=forma class="form-control" (ngSubmit)="guardar()">
+
+        <ion-input formControlName="nombre" placeholder="Nombre de la encuesta"></ion-input>
+        <ion-item>
+            <div class="col">
+                <table class="table table-block">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th># Pregunta</th>
+                            <th>Tipo de Pregunta</th>
+                            <th>Respuestas</th>
+                            <th>Borrar</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="preguntas">
+                        <tr *ngFor="let pregunta of preguntas.controls; let ip = index">
+                            <ion-item [formGroupName]="ip">
+                                <td>
+                                    {{ ip + 1}}
+                                    <ion-input class="form-control" formControlName="pregunta" placeholder="Escriba la pregunta"></ion-input>
+                                </td>
+                                <td>
+                                    <ion-item>
+                                        <ion-label>Tipo de pregunta</ion-label>
+                                        <ion-select class="form-control" formControlName="tipoP" placeholder="Seleciona">
+                                            <ion-select-option value="SM">Selección Multiple</ion-select-option>
+                                            <ion-select-option value="RU">Respuesta única</ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                </td>
+                                <td formArrayName="respuestas">
+
+                                    <ion-item *ngFor="let respuesta of respuestas(ip).controls; let ir = index ">
+                                        <ion-item [formGroupName]="ir">
+                                            {{ ir + 1 }}
+                                            <ion-input class="form-control" formControlName="respuesta" placeholder="escriba su respuesta"> </ion-input>
+                                            <ion-button color="danger" (click)="borrarRespuesta(ip,ir)">
+                                                <ion-icon name="close-circle-outline"></ion-icon>
+                                            </ion-button>
+                                        </ion-item>
+                                    </ion-item>
+
+                                    <ion-button (click)="addRespuesta(ip)" color="secondary">+</ion-button>
+                                </td>
+                                <td>
+                                    <ion-button color="danger" (click)="borrarPregunta(ip)">
+                                        <ion-icon name="close-circle-outline"></ion-icon>
+                                    </ion-button>
+                                </td>
+                            </ion-item>
+                        </tr>
+                    </tbody>
+                </table>
+                <ion-button color="primary" slot="center" (click)="agregarPregunta()"> + Agregar</ion-button>
+            </div>
+        </ion-item>
+        <ion-button type="submit" expand="block">
+            Terminar
+        </ion-button>
+
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Card Title</ion-card-title>
+                <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+
+            </ion-card-header>
+
+            <ion-card-content>
+                Keep close to Nature's heart... and break clear away, once in awhile, and climb a mountain or spend a week in the woods. Wash your spirit clean.
+            </ion-card-content>
+        </ion-card>
+
+    </form>
+
+    <hr>
+    <pre>
+      Estado del formulario: {{ forma.valid }}
+      <br>
+      Status: {{ forma.status }}
+    
+      <pre>
+          {{ forma.value | json }}
+      </pre>
+    </pre>
+
+
+</ion-content>

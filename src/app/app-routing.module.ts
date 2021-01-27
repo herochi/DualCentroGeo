@@ -8,8 +8,12 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'cuestionarios',
     pathMatch: 'full'
+  },
+  {
+    path: 'cuestionarios',
+    loadChildren: () => import('./pages/cuestionarios/cuestionarios.module').then( m => m.CuestionariosPageModule)
   },
 ];
 
