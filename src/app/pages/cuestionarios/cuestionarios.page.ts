@@ -112,5 +112,5 @@ export class CuestionariosPage implements OnInit {
     });
   }*/
 
-  // soy un cambio
+
 }
