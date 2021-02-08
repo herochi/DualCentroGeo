@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { CuestionarioService } from '../../services/cuestionario.service';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-cuestionarios',
@@ -9,9 +13,12 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 export class CuestionariosPage implements OnInit {
 
   forma: FormGroup;
+  form;
+  enviado = 0;
 
-
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    // tslint:disable-next-line: align
+    private cuestionarioService: CuestionarioService, private router: Router) {
     this.crearFormulario();
   }
 
@@ -35,6 +42,7 @@ export class CuestionariosPage implements OnInit {
   // Formulario principal
   crearFormulario() {
     this.forma = this.fb.group({
+      id: [''],
       nombre: ['', Validators.required],
       preguntas: this.fb.array([]),
     });
@@ -52,7 +60,7 @@ export class CuestionariosPage implements OnInit {
   // Agregar la nueva pregunta ******************************
   agregarPregunta() {
     this.preguntas.push(this.nuevaPregunta());
-    console.log(this.forma);
+    // console.log(this.forma);
     // this.addRespuesta();
 
   }
@@ -73,7 +81,6 @@ export class CuestionariosPage implements OnInit {
   // Añadir las respuestas
   addRespuesta(i: number) {
     this.respuestas(i).push(this.nuevasRespuestas());
-    console.log(this.respuestas(i));
   }
 
 
@@ -99,8 +106,41 @@ export class CuestionariosPage implements OnInit {
 
 
   guardar() {
-    console.log(this.forma);
+
+    if (this.forma.invalid) {
+      return;
+    }
+    Swal.fire({
+      allowOutsideClick: false,
+      icon: 'info',
+      text: 'Guardando Información...'
+    });
+    Swal.showLoading();
+
+
+    this.form = JSON.stringify(this.forma.value);
+    this.cuestionarioService.crearCuestionario(this.form).
+      subscribe(resp => {
+        Swal.fire({
+          title: this.forma.controls.nombre.value,
+          icon: 'success',
+          text: 'Se guardo correctamente'
+        });
+        console.log(resp);
+        this.form = resp;
+        // this.router.navigateByUrl('/encuestas');
+      });
+
   }
+
+  actualizar() {
+    console.log(this.form);
+    this.cuestionarioService.actualizarCuestionario(this.form).
+      subscribe(resp => {
+        console.log(resp);
+      });
+  }
+
 
   /*cargar(){
     this.forma.reset({

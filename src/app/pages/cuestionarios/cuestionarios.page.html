@@ -7,6 +7,8 @@
 <ion-content>
     <form autocomplete="off" [formGroup]=forma class="form-control" (ngSubmit)="guardar()">
 
+
+
         <ion-input formControlName="nombre" placeholder="Nombre de la encuesta"></ion-input>
         <ion-item>
             <div class="col">
@@ -64,20 +66,14 @@
         <ion-button type="submit" expand="block">
             Terminar
         </ion-button>
+        <ion-button color="tertiary" *ngIf="enviado > 0" expand="block" (click)="actualizar()">
+            Actualizar
+        </ion-button>
     </form>
-    <!-- <ion-card>
-            <ion-card-header>
-                <ion-card-title>Card Title</ion-card-title>
-                <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
 
-            </ion-card-header>
 
-            <ion-card-content>
-                Keep close to Nature's heart... and break clear away, once in awhile, and climb a mountain or spend a week in the woods. Wash your spirit clean.
-            </ion-card-content>
-        </ion-card>
 
-    
+
 
     <hr>
     <pre>
@@ -88,7 +84,7 @@
       <pre>
           {{ forma.value | json }}
       </pre>
-    </pre>-->
+    </pre>
 
 
 </ion-content>

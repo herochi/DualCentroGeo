@@ -1,0 +1,49 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>responder-encuesta</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="encuesta">
+    <ion-label>
+        <h2 class="titulo">{{encuesta.nombre}}</h2>
+    </ion-label>
+    <ion-card *ngFor="let pregunta of preguntas ; let j = index">
+        <ion-list>
+            <ion-item>
+                <ion-label>{{ pregunta.pregunta }}</ion-label>
+
+            </ion-item>
+            <ion-item *ngFor="let respuesta of pregunta.respuestas ; let i = index">
+                <ion-label>{{respuesta.respuesta}}</ion-label>
+                <ion-radio *ngIf="pregunta.tipoP === 'RU'"></ion-radio>
+                <ion-checkbox *ngIf="pregunta.tipoP === 'SM'"></ion-checkbox>
+            </ion-item>
+
+        </ion-list>
+    </ion-card>
+
+    <ion-list>
+        <ion-radio-group value="biff">
+            <ion-list-header>
+                <ion-label>Name</ion-label>
+            </ion-list-header>
+
+            <ion-item>
+                <ion-label>Biff</ion-label>
+                <ion-radio slot="start" value="biff"></ion-radio>
+            </ion-item>
+
+            <ion-item>
+                <ion-label>Griff</ion-label>
+                <ion-radio slot="start" value="griff"></ion-radio>
+            </ion-item>
+
+            <ion-item>
+                <ion-label>Buford</ion-label>
+                <ion-radio slot="start" value="buford"></ion-radio>
+            </ion-item>
+        </ion-radio-group>
+    </ion-list>
+
+</ion-content>

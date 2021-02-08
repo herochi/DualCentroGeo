@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'cuestionarios',
+    redirectTo: 'encuestas',
     pathMatch: 'full'
   },
   {
@@ -23,7 +23,11 @@ const routes: Routes = [
   },
   {
     path: 'encuestas',
-    loadChildren: () => import('./pages/encuestas/encuestas.module').then( m => m.EncuestasPageModule), canActivate: [AuthGuard]
+    loadChildren: () => import('./pages/encuestas/encuestas.module').then( m => m.EncuestasPageModule),
+  },
+  {
+    path: 'responder-encuesta/:id',
+    loadChildren: () => import('./pages/responder-encuesta/responder-encuesta.module').then( m => m.ResponderEncuestaPageModule)
   },
 ];
 

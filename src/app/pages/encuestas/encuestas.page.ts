@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { CuestionarioService } from '../../services/cuestionario.service';
+import { EncuestaModel } from '../../models/encuesta.model';
 
 @Component({
   selector: 'app-encuestas',
@@ -9,13 +11,32 @@ import { Router } from '@angular/router';
 })
 export class EncuestasPage implements OnInit {
 
-  constructor(private auth: AuthService, private router: Router) { }
+  encuestas: EncuestaModel[] = [];
 
-  ngOnInit() {}
+  constructor(private auth: AuthService, private router: Router, private cuestionarios: CuestionarioService) { }
+
+  ngOnInit() {
+    this.cuestionarios.obtenerCuestionarios()
+    .subscribe( resp => {
+      // console.log(resp);
+      this.encuestas = resp;
+      console.log(this.encuestas);
+    } );
+  }
 
   salir(){
     this.auth.logout();
     this.router.navigateByUrl('/login');
+  }
+
+
+  crearCuestionario(){
+   this.router.navigateByUrl('/cuestionarios');
+  }
+
+  irResponder(id: string){
+    this.router.navigateByUrl(`/responder-encuesta/${id}`);
+    console.log(id);
   }
 
 }

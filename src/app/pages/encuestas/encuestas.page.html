@@ -5,5 +5,25 @@
 </ion-header>
 
 <ion-content>
+
+    <ion-item *ngFor="let encuesta of encuestas; let i = index">
+        <ion-label>{{encuesta.nombre}}</ion-label>
+        <ion-label>
+            <ion-button color="secondary" (click)="irResponder(encuesta.id)">Responder</ion-button>
+            <ion-button color="tertiary" [routerLink]="['/responder-encuesta/:', encuesta.id]">
+                Actualizar
+            </ion-button>
+            <ion-button color="danger">
+                <ion-icon name="close-circle-outline"></ion-icon>
+            </ion-button>
+
+        </ion-label>
+
+    </ion-item>
     <ion-button (click)="salir()" color="danger">Salir</ion-button>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="crearCuestionario()">
+            <ion-icon name="create-outline"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 </ion-content>
