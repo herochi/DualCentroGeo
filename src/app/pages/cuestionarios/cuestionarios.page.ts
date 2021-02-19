@@ -14,7 +14,7 @@ export class CuestionariosPage implements OnInit {
 
   forma: FormGroup;
   form;
-  enviado = 0;
+
 
   constructor(private fb: FormBuilder,
     // tslint:disable-next-line: align
