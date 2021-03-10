@@ -62,4 +62,20 @@ export class CuestionarioService {
   obtenerUnCuestionario(id: string){
       return this.http.get(`${ this.url }/cuestionarios/${id}.json`);
   }
+
+
+
+  guardarRespuesta( respuestas ){
+
+    return this.http.post(`${ this.url }/respuestas.json`, respuestas)
+    .pipe(
+      map( (resp: any) => {
+       return resp;
+      } )
+    );
+  }
+
+  borrarEncuesta( id: string ){
+    return this.http.delete(`${ this.url }/cuestionarios/${id}.json`);
+  }
 }

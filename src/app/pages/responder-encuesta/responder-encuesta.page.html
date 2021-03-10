@@ -5,95 +5,33 @@
 </ion-header>
 
 <ion-content *ngIf="encuesta">
-    <!-- <form>
-        <ion-label>
-            <h2 class="titulo">{{encuesta.nombre}}</h2>
-        </ion-label>
-        <ion-card *ngFor="let pregunta of preguntas ; let j = index">
-            <ion-list>
-                <ion-item>
-                    <ion-label name="pregunta">{{ pregunta.pregunta }}</ion-label>
-
-                </ion-item>
-                <ion-radio-group>
-                    <ion-item *ngFor="let respuesta of pregunta.respuestas ; let i = index">
-                        <ion-label>{{respuesta.respuesta}}</ion-label>
-                        <ion-radio *ngIf="pregunta.tipoP === 'RU'" value="respuesta.respuesta" (click)="valor(j, i)"></ion-radio>
-                        <ion-checkbox *ngIf="pregunta.tipoP === 'SM'" value="respuesta.respuesta" (click)="valor(j, i)"></ion-checkbox>
+    <div *ngFor="let pregunta of encuesta.preguntas; let indiceP = index">
+        <div *ngIf="pregunta.tipoP === 'RU'">
+            <ion-radio-group (ionChange)="funcion($event, indiceP)">
+                <ion-list-header>
+                    <h3>{{pregunta.pregunta}} </h3>
+                </ion-list-header>
+                <ion-list *ngFor="let opcion of pregunta.respuestas">
+                    <ion-item><label>{{opcion.respuesta}}</label>
+                        <ion-radio slot="end" value="{{opcion.respuesta}}"></ion-radio>
                     </ion-item>
-                </ion-radio-group>
-            </ion-list>
-        </ion-card>
-        <ion-button type="submit" expand="block">Enviar Respuesta
-            <ion-icon slot="end" name="paper-plane-outline"></ion-icon>
-        </ion-button>
-    </form>
-
-   
--->
-    <!--
-    <form [formGroup]="encuestaRespondida" (ngSubmit)="enviarRespuesta()">
-        <ion-label>{{encuestaRespondida.controls.nombre.value}}</ion-label>
-
-        <ion-card formArrayName="respuestas" *ngFor="let pregunta of respuestas.controls ; let j = index">
-            <ion-list [formGroupName]="j">
-                <ion-item>
-                    <ion-label>{{pregunta.value.pregunta}}</ion-label>
-                </ion-item>
-                <ion-radio-group formArrayName="respuesta">
-                    <ion-item *ngFor="let respuesta of preguntas[j].respuestas; let i = index">
-                        <ion-label>{{respuesta.respuesta}}</ion-label>
-                        <ion-radio *ngIf="preguntas[j].tipoP === 'RU'" [(ngModel)]="pruebaNumber2.respuestas" value="respuesta.respuesta"></ion-radio>
-                        <ion-checkbox *ngIf="preguntas[j].tipoP === 'SM'" value="respuesta.respuesta"></ion-checkbox>
+                </ion-list>
+            </ion-radio-group>
+        </div>
+        <div *ngIf="pregunta.tipoP === 'SM'">
+            <ion-radio-group>
+                <ion-list-header>
+                    <h3>{{ pregunta.pregunta}} </h3>
+                </ion-list-header>
+                <ion-list *ngFor="let opcion of pregunta.respuestas">
+                    <ion-item><label>{{opcion.respuesta}}</label>
+                        <ion-checkbox (ionChange)="funcionCheck($event, indiceP)" slot="end" value="{{opcion.respuesta}}"></ion-checkbox>
                     </ion-item>
-                </ion-radio-group>
+                </ion-list>
+            </ion-radio-group>
+        </div>
 
+    </div>
+    <ion-button expand="block" (click)="enviarRespuesta()">Enviar Respuestas</ion-button>
 
-            </ion-list>
-        </ion-card>
-
-
-
-
-
-
-
-    </form>
-
--->
-    <ion-label color="danger">Esto es una prueba</ion-label>
-    <form (ngSubmit)="enviarRespuesta()">
-        <ion-label>
-            <h2 class="titulo">{{encuesta.nombre}}</h2>
-        </ion-label>
-        <ion-card class="form-group container " *ngFor="let obj of dataArray; let j = index">
-            <ion-list>
-                <ion-item>
-                    <ion-label name="pregunta">{{ preguntas[j].pregunta }}</ion-label>
-
-                </ion-item>
-                <ion-radio-group>
-                    <ion-item *ngFor="let respuesta of preguntas[j].respuestas ; let i = index">
-                        <ion-label>{{respuesta.respuesta}}</ion-label>
-                        <ion-input name="input{{j}}" [(ngModel)]="obj.respuesta"></ion-input>
-                        <ion-radio *ngIf="preguntas[j].tipoP === 'RU'" name="respuesta{{j}}" [(ngModel)]="obj.respuesta" value="preguntas[j].respuestas[i]" (click)="valor(preguntas[j].respuestas[i])"></ion-radio>
-                        <ion-checkbox *ngIf="preguntas[j].tipoP === 'SM'" name="respuesta{{j}}" [(ngModel)]="obj.respuesta" value="preguntas[j].respuestas[i]" (click)="valor(preguntas[j].respuestas[i])"></ion-checkbox>
-                    </ion-item>
-                </ion-radio-group>
-            </ion-list>
-        </ion-card>
-        <ion-button type="submit" expand="block">Enviar Respuesta
-            <ion-icon slot="end" name="paper-plane-outline"></ion-icon>
-        </ion-button>
-    </form>
-    <hr>
-    <pre>
-      Estado del formulario: {{ encuestaRespondida.valid }}
-      <br>
-      Status: {{ encuestaRespondida.status }}
-    
-      <pre>
-          {{  encuestaRespondida.value | json }}
-      </pre>
-    </pre>
 </ion-content>

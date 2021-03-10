@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EncuestaModel } from 'src/app/models/encuesta.model';
 import { CuestionarioService } from '../../services/cuestionario.service';
-import { PreguntasModel } from '../../models/preguntas.model';
-import { EncuestaRespondidaModel } from '../../models/encuesta-respondida.model';
-import { RespuestarModel } from '../../models/respuestasr.model';
-import { FormBuilder, FormGroup, Validators, FormArray, NgForm } from '@angular/forms';
-import { PruebaModel } from '../../models/prueba.mode';
+import Swal from 'sweetalert2';
+import { LocationService } from '../../services/location.service';
+import { EncuestaRespondidaModel } from '../../models/encuesta-respondida.mode';
 
 @Component({
   selector: 'app-responder-encuesta',
@@ -15,102 +13,91 @@ import { PruebaModel } from '../../models/prueba.mode';
 })
 export class ResponderEncuestaPage implements OnInit {
 
-  arreglito: RespuestarModel[];
   encuesta: EncuestaModel;
-  preguntas: PreguntasModel[];
-  // encuestaRespondida: EncuestaRespondidaModel = new EncuestaRespondidaModel();
-  // respuestasRespondida: RespuestarModel[];
-  encuestaRespondida: FormGroup;
-  encuestaRespondidaEnv;
-  pruebaNumber2 = new PruebaModel();
-
-  // TODO ESTO ES UNA PRUEBA SI FUNCIONA CHIDO!
-
-  dataArray = [];
-
+  encuestResp: EncuestaRespondidaModel = new EncuestaRespondidaModel();
+  respuestasArray = [];
+  public latitude: number;
+  public longitude: number;
 
   constructor(private cuestionarioService: CuestionarioService,
               private route: ActivatedRoute,
-              private fb: FormBuilder) {
+              private locationService: LocationService,
+              public router: Router) {
     const id = this.route.snapshot.paramMap.get('id');
     this.cuestionarioService.obtenerUnCuestionario(id)
+      // tslint:disable-next-line: deprecation
       .subscribe((resp: EncuestaModel) => {
-        console.log('esta es la respuesta', resp);
         this.encuesta = resp;
         this.encuesta.id = id;
-        console.log(this.encuesta);
-        this.preguntas = this.encuesta.preguntas;
-        console.log('estas son las preguntas', this.preguntas);
-        this.crearFormulario();
-        console.log(this.encuestaRespondida);
-        this.agregarPregunta();
-        console.log('estas son las preguntas', this.preguntas);
         // tslint:disable-next-line: prefer-for-of
-        for (let i = 0; i < resp.preguntas.length; i++) {
-          this.dataArray.push(this.pruebaNumber2);
+        for (let i = 0; i < resp.preguntas.length; i ++){
+          this.respuestasArray.push([]);
         }
-        console.log(this.dataArray);
       });
   }
 
   ngOnInit() {}
 
-  get respuestas() {
-    return this.encuestaRespondida.get('respuestas') as FormArray;
+
+
+  funcion(evento, indice: number){
+    this.respuestasArray[indice] = evento.detail.value;
   }
 
-  crearFormulario() {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.encuestaRespondida = this.fb.group({
-      id: [id],
-      nombre: [this.encuesta.nombre, Validators.required],
-      respuestas: this.fb.array([])
-    });
-  }
+  funcionCheck(evento, indice: number){
+    if (evento.detail.checked === true){
+        this.respuestasArray[indice].push(evento.detail.value);
+    } else{
+          // tslint:disable-next-line: prefer-for-of
+          for (let i = 0; i < this.respuestasArray[indice].length; i ++){
+            if ( evento.detail.value === this.respuestasArray[indice][i]  ){
+              this.respuestasArray[indice].splice(i, 1);
+            }
 
-  crearRespuestas(i: number): FormGroup{
-    return this.fb.group({
-      pregunta:  [this.encuesta.preguntas[i].pregunta, Validators.required],
-      respuesta: this.fb.array([])
-    });
-  }
-  agregarPregunta() {
-    // tslint:disable-next-line: prefer-for-of
-    for (let i = 0; i < this.encuesta.preguntas.length; i++){
-      this.respuestas.push(this.crearRespuestas(i));
+          }
     }
-    // console.log(this.forma);
-    // this.addRespuesta();
-
   }
-  // Sacar las respuetas
-  // tslint:disable-next-line: adjacent-overload-signatures
-  obtenerRespuestas(i: number): FormArray {
-    return this.respuestas.at(i).get('respuesta') as FormArray;
-  }
-
-  agregarRespuesta(ip: number){
-    // this.respuestas(indicePregunta).push(this.obtenerRespuestas(indiceRespuesta));
-    this.obtenerRespuestas(ip).setValue(['hola']);
-
-  }
-
-  valor(algo: string){
-     // console.log(n, i);
-     // console.log(this.obtenerRespuestas(n));
-     // console.log( this.encuesta.preguntas[n].respuestas[i]);
-     console.log(algo);
-
-  }
-
-
 
   enviarRespuesta() {
-    // console.log(this.encuestaRespondida);
-    // console.log(form);
-    console.log(this.dataArray);
-
+    this.encuestResp.id = this.encuesta.id;
+    this.encuestResp.nombre = this.encuesta.nombre;
+    this.encuestResp.respuestasEncuesta = this.respuestasArray;
+    this.getLocation();
   }
 
+  getLocation() {
+    this.locationService.getPosition().then(pos => {
+        this.latitude = pos.lat;
+        this.longitude = pos.lng;
+        this.encuestResp.latitud = this.latitude;
+        this.encuestResp.longitud = this.longitude;
+
+        // Aquí se guarda la respuesta
+        Swal.fire({
+          allowOutsideClick: false,
+          icon: 'info',
+          text: 'Guardando Información...'
+        });
+        Swal.showLoading();
+        this.cuestionarioService.guardarRespuesta(this.encuestResp).
+        // tslint:disable-next-line: deprecation
+        subscribe(resp => {
+          Swal.fire({
+            title: this.encuestResp.nombre ,
+            icon: 'success',
+            text: 'Se guardo correctamente'
+          });
+          this.router.navigateByUrl('/encuestas');
+        }, (err) => {
+          console.log(err.error.error.message);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al autenticar',
+            text: err.error.error.message
+          });
+        }
+        );
+    });
+  }
 
 }

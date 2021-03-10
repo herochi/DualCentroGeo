@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { CuestionarioService } from '../../services/cuestionario.service';
 import { EncuestaModel } from '../../models/encuesta.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-encuestas',
@@ -37,6 +38,23 @@ export class EncuestasPage implements OnInit {
   irResponder(id: string){
     this.router.navigateByUrl(`/responder-encuesta/${id}`);
     console.log(id);
+  }
+
+  borrarEncuesta( cuestionario: EncuestaModel, i: number ){
+    // console.log(this.encuestResp);
+    Swal.fire({
+      title: '¿Está seguro?' ,
+      icon: 'question',
+      text: `Esta seguro de que quiere eliminar la encuesta ${ cuestionario.nombre }`,
+      showConfirmButton: true,
+      showCancelButton: true
+    }).then(resp => {
+      if ( resp.value ){
+        this.encuestas.splice(i, 1);
+        this.cuestionarios.borrarEncuesta(cuestionario.id).subscribe();
+      }
+    });
+
   }
 
 }

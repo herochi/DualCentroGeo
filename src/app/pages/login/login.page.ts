@@ -31,6 +31,7 @@ export class LoginPage implements OnInit {
     Swal.showLoading();
 
     this.auth.login(this.usuario)
+      // tslint:disable-next-line: deprecation
       .subscribe(resp => {
         console.log(resp);
         Swal.close();

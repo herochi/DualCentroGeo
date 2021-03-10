@@ -13,7 +13,7 @@
             <ion-button color="tertiary" [routerLink]="['/responder-encuesta/:', encuesta.id]">
                 Actualizar
             </ion-button>
-            <ion-button color="danger">
+            <ion-button color="danger" (click)="borrarEncuesta(encuesta, i)">
                 <ion-icon name="close-circle-outline"></ion-icon>
             </ion-button>
 

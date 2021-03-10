@@ -10,12 +10,12 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'encuestas',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
     path: 'cuestionarios',
-    loadChildren: () => import('./pages/cuestionarios/cuestionarios.module').then( m => m.CuestionariosPageModule)
+    loadChildren: () => import('./pages/cuestionarios/cuestionarios.module').then( m => m.CuestionariosPageModule), canActivate: [AuthGuard]
   },
   {
     path: 'login',
@@ -23,11 +23,12 @@ const routes: Routes = [
   },
   {
     path: 'encuestas',
-    loadChildren: () => import('./pages/encuestas/encuestas.module').then( m => m.EncuestasPageModule),
+    loadChildren: () => import('./pages/encuestas/encuestas.module').then( m => m.EncuestasPageModule),  canActivate: [AuthGuard]
   },
   {
     path: 'responder-encuesta/:id',
-    loadChildren: () => import('./pages/responder-encuesta/responder-encuesta.module').then( m => m.ResponderEncuestaPageModule)
+    // tslint:disable-next-line: max-line-length
+    loadChildren: () => import('./pages/responder-encuesta/responder-encuesta.module').then( m => m.ResponderEncuestaPageModule), canActivate: [AuthGuard]
   },
 ];
 
