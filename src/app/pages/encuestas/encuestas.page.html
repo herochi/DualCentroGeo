@@ -9,11 +9,11 @@
     <ion-item *ngFor="let encuesta of encuestas; let i = index">
         <ion-label>{{encuesta.nombre}}</ion-label>
         <ion-label>
-            <ion-button color="secondary" (click)="irResponder(encuesta.id)">Responder</ion-button>
-            <ion-button color="tertiary" [routerLink]="['/responder-encuesta/:', encuesta.id]">
+            <ion-button color="secondary" *ngIf="tipoUser === 'normal'" (click)="irResponder(encuesta.id)">Responder</ion-button>
+            <ion-button *ngIf="tipoUser === 'investigador'" color="tertiary" [routerLink]="['/responder-encuesta/:', encuesta.id]">
                 Actualizar
             </ion-button>
-            <ion-button color="danger" (click)="borrarEncuesta(encuesta, i)">
+            <ion-button *ngIf="tipoUser === 'investigador'" color="danger" (click)="borrarEncuesta(encuesta, i)">
                 <ion-icon name="close-circle-outline"></ion-icon>
             </ion-button>
 
@@ -22,7 +22,7 @@
     </ion-item>
     <ion-button (click)="salir()" color="danger">Salir</ion-button>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button (click)="crearCuestionario()">
+        <ion-fab-button *ngIf="tipoUser === 'investigador'" (click)="crearCuestionario()">
             <ion-icon name="create-outline"></ion-icon>
         </ion-fab-button>
     </ion-fab>

@@ -12,6 +12,7 @@ export class AuthService {
   private apiKey = 'AIzaSyAfc6F6NNNslbpa_mmOKjTqRGeQRPEVQgY';
 
   userToken = '';
+  correoUser = '';
 
   // Crear nuevo usuario
   // https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]
@@ -33,6 +34,8 @@ export class AuthService {
       map(resp => {
         // tslint:disable-next-line: no-string-literal
         this.guardarToken(resp['idToken']);
+        // tslint:disable-next-line: no-string-literal
+        this.guardarCorreo(resp['email']);
         return resp;
       })
     );
@@ -46,6 +49,11 @@ export class AuthService {
     const hoy = new Date();
     hoy.setSeconds(3600);
     localStorage.setItem('expira', hoy.getTime().toString());
+  }
+
+  private guardarCorreo( correo: string ){
+    this.correoUser = correo;
+    localStorage.setItem('correo', correo);
   }
 
   leerToken(){

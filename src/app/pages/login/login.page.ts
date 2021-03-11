@@ -18,7 +18,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.usuario = new UsuarioModel();
-    this.usuario.email = 'investigador@gmail.com';
+    this.usuario.email = 'gandhi@centrogeo.edu.mx';
   }
 
   login(loginForm: NgForm) {
